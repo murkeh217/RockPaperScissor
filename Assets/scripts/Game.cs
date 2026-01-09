@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,17 +13,53 @@ public class Game : MonoBehaviour
     public Transform player1Spawn;
     public Transform player2Spawn;
 
-    private void Start()
+    [Header("UI Elements")]
+    public TMP_Text matchText;
+    public Button goButton;
+    public TMP_Text P1;
+    public TMP_Text P2;
+
+    public enum RPS
     {
-        SpawnForPlayer(player1Spawn);
-        SpawnForPlayer(player2Spawn);
+        Rock,
+        Paper,
+        Scissors
     }
 
-    void SpawnForPlayer(Transform playerSpawn)
-    {
-        // Pick Rock / Paper / Scissors randomly
-        int choice = Random.Range(0, 3);
 
+    private RPS player1Choice;
+    private RPS player2Choice;
+
+    void Start()
+    {
+        matchText.text = "vs.";
+    }
+
+    public void GameOn()
+    {
+        ResetRound();
+
+        player1Choice = SpawnForPlayer(player1Spawn);
+        player2Choice = SpawnForPlayer(player2Spawn);
+
+        DecideWinner();
+    }
+
+    void ResetRound()
+    {
+        matchText.text = "vs.";
+
+        // Destroy previously spawned objects
+        foreach (Transform child in player1Spawn)
+            Destroy(child.gameObject);
+
+        foreach (Transform child in player2Spawn)
+            Destroy(child.gameObject);
+    }
+
+    RPS SpawnForPlayer(Transform playerSpawn)
+    {
+        int choice = Random.Range(0, 3);
         GameObject prefab = null;
 
         switch (choice)
@@ -40,12 +77,50 @@ public class Game : MonoBehaviour
                 break;
         }
 
-        if (prefab != null)
+        GameObject obj = Instantiate(prefab, playerSpawn);
+        obj.transform.localPosition = Vector3.zero;
+        obj.transform.localRotation = Quaternion.identity;
+        obj.transform.localScale = Vector3.one;
+
+        if (playerSpawn == player1Spawn)
+            P1.text = prefab.name;
+        else
+            P2.text = prefab.name;  
+
+        return (RPS)choice;
+    }   
+
+    void DecideWinner()
+    {
+        if (player1Choice == player2Choice)
         {
-            GameObject obj = Instantiate(prefab, playerSpawn);
-            obj.transform.localPosition = Vector3.zero;
-            obj.transform.localRotation = Quaternion.identity;
-            obj.transform.localScale = Vector3.one;
+            matchText.text = "It's a Tie!";
+            return;
+        }
+
+        if(player1Choice == RPS.Rock && player2Choice == RPS.Scissors)
+        {
+            matchText.text = "Rock crushes Scissors!";
+        }
+        else if(player1Choice == RPS.Paper && player2Choice == RPS.Rock)
+        {
+            matchText.text = "Paper covers Rock!";
+        }   
+        else if(player1Choice == RPS.Scissors && player2Choice == RPS.Paper)
+        {
+            matchText.text = "Scissors cuts Paper!";
+        }
+        else if(player2Choice == RPS.Rock && player1Choice == RPS.Scissors)
+        {
+            matchText.text = "Rock crushes Scissors!";
+        }
+        else if(player2Choice == RPS.Paper && player1Choice == RPS.Rock)
+        {
+            matchText.text = "Paper covers Rock!";
+        }   
+        else if(player2Choice == RPS.Scissors && player1Choice == RPS.Paper)
+        {
+            matchText.text = "Scissors cuts Paper!";
         }
     }
 }
