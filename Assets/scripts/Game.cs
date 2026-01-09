@@ -67,11 +67,9 @@ public class Game : MonoBehaviour
             case 0:
                 prefab = rock.Prefabs[Random.Range(0, rock.Prefabs.Length)];
                 break;
-
             case 1:
                 prefab = paper.Prefabs[Random.Range(0, paper.Prefabs.Length)];
                 break;
-
             case 2:
                 prefab = scissors.Prefabs[Random.Range(0, scissors.Prefabs.Length)];
                 break;
@@ -82,13 +80,15 @@ public class Game : MonoBehaviour
         obj.transform.localRotation = Quaternion.identity;
         obj.transform.localScale = Vector3.one;
 
+        string objectName = obj.name.Replace("(Clone)", "");
+
         if (playerSpawn == player1Spawn)
-            P1.text = prefab.name;
+            P1.text = objectName;
         else
-            P2.text = prefab.name;  
+            P2.text = objectName;
 
         return (RPS)choice;
-    }   
+    }
 
     void DecideWinner()
     {
@@ -98,29 +98,15 @@ public class Game : MonoBehaviour
             return;
         }
 
-        if(player1Choice == RPS.Rock && player2Choice == RPS.Scissors)
+        if((player1Choice == RPS.Rock && player2Choice == RPS.Scissors) || 
+        (player1Choice == RPS.Paper && player2Choice == RPS.Rock) || 
+        (player1Choice == RPS.Scissors && player2Choice == RPS.Paper))
         {
-            matchText.text = "Rock crushes Scissors!";
+            matchText.text = "Player 1 Wins! ";
         }
-        else if(player1Choice == RPS.Paper && player2Choice == RPS.Rock)
+        else
         {
-            matchText.text = "Paper covers Rock!";
-        }   
-        else if(player1Choice == RPS.Scissors && player2Choice == RPS.Paper)
-        {
-            matchText.text = "Scissors cuts Paper!";
-        }
-        else if(player2Choice == RPS.Rock && player1Choice == RPS.Scissors)
-        {
-            matchText.text = "Rock crushes Scissors!";
-        }
-        else if(player2Choice == RPS.Paper && player1Choice == RPS.Rock)
-        {
-            matchText.text = "Paper covers Rock!";
-        }   
-        else if(player2Choice == RPS.Scissors && player1Choice == RPS.Paper)
-        {
-            matchText.text = "Scissors cuts Paper!";
+            matchText.text = "Player 2 Wins!";
         }
     }
 }
