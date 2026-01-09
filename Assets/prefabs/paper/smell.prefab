@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8203246644594332418}
   m_Layer: 0
   m_Name: smell
-  m_TagString: Paper
+  m_TagString: (Paper)
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

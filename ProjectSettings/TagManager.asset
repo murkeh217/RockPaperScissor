@@ -4,9 +4,9 @@
 TagManager:
   serializedVersion: 3
   tags:
-  - Rock
-  - Paper
-  - Scissor
+  - (Rock)
+  - (Paper)
+  - (Scissor)
   layers:
   - Default
   - TransparentFX

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1170879618097331763}
   m_Layer: 0
   m_Name: mind
-  m_TagString: Paper
+  m_TagString: (Paper)
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

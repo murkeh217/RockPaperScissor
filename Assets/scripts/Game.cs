@@ -83,9 +83,9 @@ public class Game : MonoBehaviour
         string objectName = obj.name.Replace("(Clone)", "");
 
         if (playerSpawn == player1Spawn)
-            P1.text = objectName;
+            P1.text = objectName + " " + obj.tag;
         else
-            P2.text = objectName;
+            P2.text = objectName + " " + obj.tag;
 
         return (RPS)choice;
     }
