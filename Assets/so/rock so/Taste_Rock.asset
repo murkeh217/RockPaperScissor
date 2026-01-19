@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1b74992383eb758e9dadfe1487e5f6e, type: 3}
+  m_Name: Taste_Rock
+  m_EditorClassIdentifier: 
+  cardName: Taste
+  cardType: 0
+  icon: {fileID: 4130199829969160364, guid: 0db583182d77db704a0e66b9cdf0255c, type: 3}
