@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1b74992383eb758e9dadfe1487e5f6e, type: 3}
   m_Name: Control_Scissors
   m_EditorClassIdentifier: 
-  cardName: Scissors
+  cardName: Control
   cardType: 2
-  icon: {fileID: -8052868300708128226, guid: f37856b04da075ca99a8fe8e73328298, type: 3}
+  icon: {fileID: -163338074959551036, guid: fa73a6f8e96399e6ba95656a0602c398, type: 3}

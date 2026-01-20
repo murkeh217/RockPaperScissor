@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d1b74992383eb758e9dadfe1487e5f6e, type: 3}
-  m_Name: Absolute_Rock
+  m_Name: System_Rock
   m_EditorClassIdentifier: 
-  cardName: Absolute
+  cardName: System
   cardType: 0
   icon: {fileID: -6415089506527798895, guid: c1756ada7ca336b6db1a4d1c2c864a0d, type: 3}

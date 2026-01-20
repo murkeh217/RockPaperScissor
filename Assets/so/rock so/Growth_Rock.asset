@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1b74992383eb758e9dadfe1487e5f6e, type: 3}
   m_Name: Growth_Rock
   m_EditorClassIdentifier: 
-  cardName: Rock
+  cardName: Growth
   cardType: 0
-  icon: {fileID: -1650855591063970158, guid: 62663e9de99e9d86ea9173cf16a1579c, type: 3}
+  icon: {fileID: 1590831685541412330, guid: 5a3c2a58ed2f486c38d79e38960664c1, type: 3}

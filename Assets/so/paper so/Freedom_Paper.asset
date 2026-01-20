@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1b74992383eb758e9dadfe1487e5f6e, type: 3}
   m_Name: Freedom_Paper
   m_EditorClassIdentifier: 
-  cardName: Paoer
+  cardName: Freedom
   cardType: 1
-  icon: {fileID: 3948968955104812276, guid: 20fb5dbc1abe335e58e4a5364ef71da9, type: 3}
+  icon: {fileID: -3294436808796612703, guid: a7e6f6a9b8c118b42bf235cdaed6f546, type: 3}

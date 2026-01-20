@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
+using System.Collections;
 
 public class RPSGameManager : MonoBehaviour
 {
@@ -15,12 +17,33 @@ public class RPSGameManager : MonoBehaviour
     List<RPSCard> playerHand;
     List<RPSCard> aiHand;
 
-    int round = 1;
-    int playerScore = 0;
-    int aiScore = 0;
+    int round;
+    int playerScore;
+    int aiScore;
+
+    bool isResolving;
+
+    [Header("AI UI")]
+    public Image aiCardImage;
+    public Sprite aiCardBack;
+
+    [Header("End Game")]
+    public GameObject endPanel;
+    public TMP_Text resultText;
+
+    [Header("Audio")]
+    public AudioSource audioSource;
+    public AudioClip cardPlay;
+    public AudioClip winSound;
+    public AudioClip loseSound;
+
+    int coins;
+    int winStreak;
 
     void Start()
     {
+        coins = PlayerPrefs.GetInt("Coins", 0);
+        winStreak = PlayerPrefs.GetInt("WinStreak", 0);
         StartGame();
     }
 
@@ -29,11 +52,19 @@ public class RPSGameManager : MonoBehaviour
         round = 1;
         playerScore = 0;
         aiScore = 0;
+        isResolving = false;
+
+        endPanel.SetActive(false);
 
         playerHand = DrawCards(7);
         aiHand = DrawCards(7);
 
         SpawnPlayerCards();
+
+        aiCardImage.sprite = aiCardBack;
+        aiCardImage.transform.localScale = Vector3.one;
+        aiCardImage.enabled = true;
+
         UpdateUI();
     }
 
@@ -58,19 +89,45 @@ public class RPSGameManager : MonoBehaviour
 
         foreach (var card in playerHand)
         {
-            GameObject go = Instantiate(cardPrefab, playerHandParent);
-            go.GetComponent<CardView>()
-              .Setup(card, OnPlayerCardSelected);
+            Instantiate(cardPrefab, playerHandParent)
+                .GetComponent<CardView>()
+                .Setup(card, OnPlayerCardSelected);
         }
     }
 
     void OnPlayerCardSelected(RPSCard playerCard)
     {
-        if (round > 7) return;
+        if (isResolving || round > 7) return;
+
+        isResolving = true;
+
+        audioSource.PlayOneShot(cardPlay);
+        Handheld.Vibrate();
+
+        StartCoroutine(AIDelay(playerCard));
+    }
+
+
+    IEnumerator AIDelay(RPSCard playerCard)
+    {
+        yield return new WaitForSeconds(0.4f);
 
         RPSCard aiCard = PickAICard();
-        int result = ResolveRound(playerCard.cardType, aiCard.cardType);
+        yield return StartCoroutine(ResolveRoundSequence(playerCard, aiCard));
+    }
 
+
+    IEnumerator ResolveRoundSequence(RPSCard playerCard, RPSCard aiCard)
+    {
+        isResolving = true;
+
+        // Ensure AI card starts face-down & scale reset
+        aiCardImage.sprite = aiCardBack;
+        aiCardImage.transform.localScale = Vector3.one;
+
+        yield return StartCoroutine(RevealAICard(aiCard));
+
+        int result = ResolveRound(playerCard.cardType, aiCard.cardType);
         if (result == 1) playerScore++;
         else if (result == -1) aiScore++;
 
@@ -78,12 +135,57 @@ public class RPSGameManager : MonoBehaviour
         aiHand.Remove(aiCard);
 
         round++;
+
+        // END GAME CHECK FIRST
+        if (round > 7)
+        {
+            UpdateUI();
+            EndGame();
+            yield break;
+        }
+
         UpdateUI();
         SpawnPlayerCards();
 
-        if (round > 7)
-            EndGame();
+        // Reset AI card back for next round
+        aiCardImage.sprite = aiCardBack;
+        aiCardImage.transform.localScale = Vector3.one;
+
+        yield return new WaitForSeconds(0.2f);
+        isResolving = false;
+
     }
+    IEnumerator RevealAICard(RPSCard aiCard)
+    {
+        aiCardImage.transform.localScale = Vector3.one;
+        aiCardImage.sprite = aiCardBack;
+
+        yield return new WaitForSeconds(0.05f);
+
+        float t = 0f;
+        while (t < 0.2f)
+        {
+            aiCardImage.transform.localScale =
+                new Vector3(Mathf.Lerp(1, 0, t / 0.2f), 1, 1);
+            t += Time.deltaTime;
+            yield return null;
+        }
+
+        aiCardImage.sprite = aiCard.icon;
+
+        t = 0f;
+        while (t < 0.2f)
+        {
+            aiCardImage.transform.localScale =
+                new Vector3(Mathf.Lerp(0, 1, t / 0.2f), 1, 1);
+            t += Time.deltaTime;
+            yield return null;
+        }
+
+        // GUARANTEE visibility
+        aiCardImage.transform.localScale = Vector3.one;
+    }
+
 
     RPSCard PickAICard()
     {
@@ -112,6 +214,35 @@ public class RPSGameManager : MonoBehaviour
 
     void EndGame()
     {
-        Debug.Log(playerScore > aiScore ? "YOU WIN" : "YOU LOSE");
+        isResolving = true;
+
+        endPanel.SetActive(true);
+
+        if (playerScore > aiScore)
+        {
+            audioSource.PlayOneShot(winSound);
+            winStreak++;
+            int reward = 10 + (winStreak * 2);
+            coins += reward;
+            resultText.text = $"YOU WIN!\n+{reward} Coins";
+        }
+        else if (playerScore < aiScore)
+        {
+            audioSource.PlayOneShot(loseSound);
+            winStreak = 0;
+            resultText.text = "YOU LOSE";
+        }
+        else
+        {
+            resultText.text = "DRAW";
+        }
+
+        PlayerPrefs.SetInt("Coins", coins);
+        PlayerPrefs.SetInt("WinStreak", winStreak);
+    }
+
+    public void PlayAgain()
+    {
+        StartGame();
     }
 }
